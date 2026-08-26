@@ -23,21 +23,23 @@ interface DocumentInfo {
 function ConfidenceBadge({ score, isInScope }: { score: number; isInScope: boolean }) {
   if (!isInScope && score < 0.45) {
     return (
-      <span className="inline-flex items-center gap-1.5 text-sm px-3 py-1 rounded-full bg-red-50 text-red-500 border border-red-200">
+      <span className="inline-flex items-center gap-1.5 text-sm px-3 py-1 rounded-full border"
+        style={{ background: 'rgba(239,68,68,0.1)', color: '#f87171', borderColor: 'rgba(239,68,68,0.3)' }}>
         <span className="w-2 h-2 rounded-full bg-red-400" />
-        Out of scope
+        Not found in document
       </span>
     );
   }
   const level = score >= 0.65 ? 'high' : score >= 0.45 ? 'medium' : 'low';
   const config = {
-    high:   { label: 'High confidence',   color: 'text-emerald-600', bg: 'bg-emerald-50', border: 'border-emerald-200', dot: 'bg-emerald-500' },
-    medium: { label: 'Medium confidence', color: 'text-amber-600',   bg: 'bg-amber-50',   border: 'border-amber-200',   dot: 'bg-amber-500'   },
-    low:    { label: 'Low confidence',    color: 'text-red-600',     bg: 'bg-red-50',     border: 'border-red-200',     dot: 'bg-red-500'     },
+    high:   { label: 'High confidence',   color: '#4ade80', bg: 'rgba(74,222,128,0.08)',  border: 'rgba(74,222,128,0.25)',  dot: '#4ade80'  },
+    medium: { label: 'Medium confidence', color: '#D4A017', bg: 'rgba(212,160,23,0.08)',  border: 'rgba(212,160,23,0.25)',  dot: '#D4A017'  },
+    low:    { label: 'Low confidence',    color: '#f87171', bg: 'rgba(248,113,113,0.08)', border: 'rgba(248,113,113,0.25)', dot: '#f87171'  },
   }[level];
   return (
-    <span className={`inline-flex items-center gap-1.5 text-sm px-3 py-1 rounded-full ${config.bg} ${config.color} border ${config.border}`}>
-      <span className={`w-2 h-2 rounded-full ${config.dot}`} />
+    <span className="inline-flex items-center gap-1.5 text-sm px-3 py-1 rounded-full border"
+      style={{ background: config.bg, color: config.color, borderColor: config.border }}>
+      <span className="w-2 h-2 rounded-full" style={{ background: config.dot }} />
       {config.label} · {(score * 100).toFixed(0)}%
     </span>
   );
@@ -107,115 +109,147 @@ export default function Home() {
 
   function handleReset() { setDoc(null); setMessages([]); setInput(''); setUploadError(''); }
 
+  const baseStyle = {
+    background: '#0A0A0A',
+    fontFamily: "'Outfit', sans-serif",
+    color: '#F5F5F5',
+    minHeight: '100vh',
+  };
+
+  const fonts = (
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,700;1,400&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  );
+
   if (!doc) {
     return (
-      <div className="min-h-screen" style={{
-        background: 'linear-gradient(135deg, #EFF6FF 0%, #EEF2FF 50%, #F5F3FF 100%)',
-        fontFamily: "'Plus Jakarta Sans', sans-serif"
-      }}>
-        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+      <div style={baseStyle}>
+        {fonts}
 
         {/* Header */}
-        <header className="px-8 py-5 flex items-center justify-between border-b border-indigo-100 bg-white/60 backdrop-blur-sm">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-indigo-600 flex items-center justify-center shadow-lg shadow-indigo-200">
-              <MessageSquare className="w-5 h-5 text-white" />
+        <header style={{ borderBottom: '1px solid #1a1a1a', padding: '20px 40px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'rgba(10,10,10,0.8)', backdropFilter: 'blur(12px)', position: 'sticky', top: 0, zIndex: 10 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <div style={{ width: 40, height: 40, borderRadius: 12, background: 'linear-gradient(135deg, #22c55e, #16a34a)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 0 20px rgba(34,197,94,0.3)' }}>
+              <MessageSquare size={18} color="white" />
             </div>
             <div>
-              <h1 className="text-base font-bold text-indigo-950">Document Intelligence</h1>
-              <p className="text-xs text-indigo-400 font-semibold tracking-wide">POWERED BY RAG + GEMINI</p>
+              <div style={{ fontSize: 16, fontWeight: 700, color: '#F5F5F5', fontFamily: "'Fraunces', serif" }}>Document Intelligence</div>
+              <div style={{ fontSize: 11, color: '#4ade80', fontWeight: 600, letterSpacing: '0.1em' }}>POWERED BY RAG + GEMINI</div>
             </div>
           </div>
-          <a href="https://github.com/NinaweRahul/document-intelligence-app"
-            target="_blank" rel="noopener noreferrer"
-            className="text-sm font-semibold text-indigo-500 hover:text-indigo-700 px-4 py-2 rounded-2xl hover:bg-white/80 transition-all duration-200">
-            GitHub →
-          </a>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
+            <a href="https://ninawerahul.github.io" target="_blank" rel="noopener noreferrer"
+              style={{ fontSize: 13, color: '#D4A017', fontWeight: 600, textDecoration: 'none' }}>
+              Portfolio →
+            </a>
+            <a href="https://github.com/NinaweRahul/document-intelligence-app" target="_blank" rel="noopener noreferrer"
+              style={{ fontSize: 13, color: '#888', fontWeight: 600, textDecoration: 'none' }}>
+              GitHub →
+            </a>
+          </div>
         </header>
 
         {/* Hero */}
-        <div className="max-w-2xl mx-auto px-6 pt-16 pb-8 text-center">
-          <div className="inline-flex items-center gap-2 bg-white border border-indigo-200 rounded-full px-4 py-2 mb-8 shadow-sm">
-            <span className={`w-2 h-2 rounded-full ${serverReady ? 'bg-emerald-400' : 'bg-amber-400 animate-pulse'}`} />
-            <span className="text-sm font-semibold text-indigo-700">
-              {serverReady ? 'Server ready — upload to begin' : 'Warming up server...'}
+        <div style={{ maxWidth: 680, margin: '0 auto', padding: '80px 24px 40px', textAlign: 'center' }}>
+
+          {/* Status pill */}
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#141414', border: '1px solid #262626', borderRadius: 999, padding: '8px 16px', marginBottom: 40 }}>
+            <span style={{ width: 8, height: 8, borderRadius: '50%', background: serverReady ? '#4ade80' : '#D4A017', display: 'inline-block', animation: serverReady ? 'none' : 'pulse 1.5s infinite' }} />
+            <span style={{ fontSize: 13, fontWeight: 600, color: serverReady ? '#4ade80' : '#D4A017' }}>
+              {serverReady ? 'Ready — drop a PDF to get started' : 'Starting up, just a moment...'}
             </span>
           </div>
 
-          <h2 className="text-5xl font-extrabold text-indigo-950 mb-5 leading-tight tracking-tight">
+          <h2 style={{ fontFamily: "'Fraunces', serif", fontSize: 56, fontWeight: 700, lineHeight: 1.1, marginBottom: 20, color: '#F5F5F5' }}>
             Ask anything about<br />
-            <span className="text-indigo-600">any document</span>
+            <em style={{ color: '#4ade80', fontStyle: 'italic' }}>any document</em>
           </h2>
-          <p className="text-lg text-indigo-400 font-medium mb-10 leading-relaxed">
-            Upload a PDF and get instant, grounded answers<br />powered by RAG and semantic search.
+          <p style={{ fontSize: 18, color: '#888', fontWeight: 500, marginBottom: 48, lineHeight: 1.6 }}>
+            Upload a PDF and get instant answers in plain English.<br />
+            No searching, no scrolling — just ask.
           </p>
 
           {/* Upload Zone */}
           <div
-            className={`border-2 border-dashed rounded-3xl p-14 cursor-pointer transition-all duration-300 bg-white/70 backdrop-blur-sm ${
-              isDragging
-                ? 'border-indigo-500 bg-indigo-50/80 scale-[1.02] shadow-2xl shadow-indigo-100'
-                : 'border-indigo-200 hover:border-indigo-400 hover:bg-white/90 hover:shadow-2xl hover:shadow-indigo-100 hover:scale-[1.01]'
-            }`}
+            style={{
+              border: `2px dashed ${isDragging ? '#4ade80' : '#262626'}`,
+              borderRadius: 24,
+              padding: '64px 48px',
+              cursor: isUploading ? 'default' : 'pointer',
+              transition: 'all 0.3s ease',
+              background: isDragging ? 'rgba(74,222,128,0.05)' : '#111111',
+              transform: isDragging ? 'scale(1.01)' : 'scale(1)',
+              boxShadow: isDragging ? '0 0 40px rgba(74,222,128,0.15)' : 'none',
+            }}
             onClick={() => !isUploading && fileInputRef.current?.click()}
             onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
             onDragLeave={() => setIsDragging(false)}
             onDrop={(e) => { e.preventDefault(); setIsDragging(false); const f = e.dataTransfer.files[0]; if (f) handleUpload(f); }}
           >
-            <input ref={fileInputRef} type="file" accept=".pdf" className="hidden"
+            <input ref={fileInputRef} type="file" accept=".pdf" style={{ display: 'none' }}
               onChange={(e) => { const f = e.target.files?.[0]; if (f) handleUpload(f); }} />
 
             {isUploading ? (
-              <div className="flex flex-col items-center gap-5">
-                <div className="w-20 h-20 rounded-3xl bg-indigo-100 flex items-center justify-center">
-                  <Loader2 className="w-10 h-10 text-indigo-600 animate-spin" />
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20 }}>
+                <div style={{ width: 72, height: 72, borderRadius: 20, background: 'rgba(74,222,128,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(74,222,128,0.2)' }}>
+                  <Loader2 size={36} color="#4ade80" className="animate-spin" />
                 </div>
                 <div>
-                  <p className="text-xl font-bold text-indigo-900">Indexing your document...</p>
-                  <p className="text-base text-indigo-400 mt-1">Chunking and embedding — takes about 20 seconds</p>
+                  <div style={{ fontSize: 20, fontWeight: 700, color: '#F5F5F5', marginBottom: 6 }}>Reading your document...</div>
+                  <div style={{ fontSize: 15, color: '#888' }}>Almost ready — this takes about 20 seconds</div>
                 </div>
               </div>
             ) : (
-              <div className="flex flex-col items-center gap-5">
-                <div className={`w-20 h-20 rounded-3xl flex items-center justify-center transition-all duration-300 ${
-                  isDragging ? 'bg-indigo-600 scale-110 shadow-lg shadow-indigo-300' : 'bg-indigo-100'
-                }`}>
-                  <Upload className={`w-10 h-10 transition-colors ${isDragging ? 'text-white' : 'text-indigo-500'}`} />
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20 }}>
+                <div style={{
+                  width: 72, height: 72, borderRadius: 20,
+                  background: isDragging ? 'linear-gradient(135deg, #22c55e, #16a34a)' : 'rgba(74,222,128,0.1)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  border: `1px solid ${isDragging ? 'transparent' : 'rgba(74,222,128,0.2)'}`,
+                  transition: 'all 0.3s ease',
+                  boxShadow: isDragging ? '0 0 30px rgba(34,197,94,0.4)' : 'none',
+                }}>
+                  <Upload size={36} color={isDragging ? 'white' : '#4ade80'} />
                 </div>
                 <div>
-                  <p className="text-xl font-bold text-indigo-900">Drop your PDF here</p>
-                  <p className="text-base text-indigo-400 mt-1">or click to browse files</p>
+                  <div style={{ fontSize: 22, fontWeight: 700, color: '#F5F5F5', marginBottom: 6 }}>Drop your PDF here</div>
+                  <div style={{ fontSize: 15, color: '#888' }}>or click to browse files</div>
                 </div>
-                <span className="text-sm font-semibold text-indigo-400 bg-indigo-50 px-4 py-1.5 rounded-full border border-indigo-100">
+                <div style={{ fontSize: 12, fontWeight: 600, color: '#555', background: '#1a1a1a', padding: '6px 14px', borderRadius: 999, border: '1px solid #262626' }}>
                   PDF files only
-                </span>
+                </div>
               </div>
             )}
           </div>
 
           {uploadError && (
-            <div className="mt-5 flex items-center justify-center gap-2 text-red-500">
-              <AlertCircle className="w-4 h-4" />
-              <span className="text-base font-medium">{uploadError}</span>
+            <div style={{ marginTop: 20, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, color: '#f87171' }}>
+              <AlertCircle size={16} />
+              <span style={{ fontSize: 15, fontWeight: 500 }}>{uploadError}</span>
             </div>
           )}
         </div>
 
         {/* How it works */}
-        <div className="max-w-2xl mx-auto px-6 pb-16">
-          <div className="grid grid-cols-3 gap-4">
+        <div style={{ maxWidth: 680, margin: '0 auto', padding: '0 24px 80px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 16 }}>
             {[
-              { icon: Upload, label: 'Upload', desc: 'PDF is chunked and embedded into a semantic vector index', color: 'bg-blue-100 text-blue-600' },
-              { icon: MessageSquare, label: 'Ask', desc: 'Questions matched to chunks by meaning, not keywords', color: 'bg-indigo-100 text-indigo-600' },
-              { icon: Zap, label: 'Verify', desc: 'Every answer shows a confidence score for full transparency', color: 'bg-violet-100 text-violet-600' },
+              { icon: Upload,        label: 'Upload', desc: 'Drop any PDF — reports, research, contracts, anything.', accent: '#4ade80' },
+              { icon: MessageSquare, label: 'Ask',    desc: 'Type a question in plain English and get a direct answer.', accent: '#D4A017' },
+              { icon: Zap,           label: 'Verify', desc: 'Each answer shows a confidence score — no hallucinations.', accent: '#818cf8' },
             ].map((step, i) => (
-              <div key={i}
-                className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 border border-indigo-100 hover:shadow-xl hover:shadow-indigo-100 hover:scale-[1.03] hover:bg-white transition-all duration-200 cursor-default">
-                <div className={`w-12 h-12 rounded-2xl ${step.color} flex items-center justify-center mb-4`}>
-                  <step.icon className="w-6 h-6" />
+              <div key={i} style={{
+                background: '#111111', borderRadius: 20, padding: 24,
+                border: '1px solid #1a1a1a', cursor: 'default',
+                transition: 'all 0.2s ease',
+              }}
+                onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.borderColor = step.accent; (e.currentTarget as HTMLDivElement).style.boxShadow = `0 0 20px ${step.accent}20`; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.borderColor = '#1a1a1a'; (e.currentTarget as HTMLDivElement).style.boxShadow = 'none'; }}
+              >
+                <div style={{ width: 44, height: 44, borderRadius: 14, background: `${step.accent}15`, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 16, border: `1px solid ${step.accent}30` }}>
+                  <step.icon size={22} color={step.accent} />
                 </div>
-                <p className="text-base font-bold text-indigo-950 mb-1.5">{step.label}</p>
-                <p className="text-sm text-indigo-400 leading-relaxed">{step.desc}</p>
+                <div style={{ fontSize: 15, fontWeight: 700, color: '#F5F5F5', marginBottom: 8 }}>{step.label}</div>
+                <div style={{ fontSize: 13, color: '#666', lineHeight: 1.6 }}>{step.desc}</div>
               </div>
             ))}
           </div>
@@ -226,74 +260,89 @@ export default function Home() {
 
   // Chat view
   return (
-    <div className="min-h-screen flex flex-col" style={{
-      background: 'linear-gradient(135deg, #EFF6FF 0%, #EEF2FF 50%, #F5F3FF 100%)',
-      fontFamily: "'Plus Jakarta Sans', sans-serif"
-    }}>
-      <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <div style={{ ...baseStyle, display: 'flex', flexDirection: 'column' }}>
+      {fonts}
 
       {/* Header */}
-      <header className="px-8 py-4 flex items-center justify-between border-b border-indigo-100 bg-white/60 backdrop-blur-sm">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-2xl bg-indigo-600 flex items-center justify-center shadow-lg shadow-indigo-200">
-            <MessageSquare className="w-5 h-5 text-white" />
+      <header style={{ borderBottom: '1px solid #1a1a1a', padding: '16px 40px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'rgba(10,10,10,0.9)', backdropFilter: 'blur(12px)', position: 'sticky', top: 0, zIndex: 10 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+          <div style={{ width: 40, height: 40, borderRadius: 12, background: 'linear-gradient(135deg, #22c55e, #16a34a)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 0 20px rgba(34,197,94,0.3)' }}>
+            <MessageSquare size={18} color="white" />
           </div>
           <div>
-            <h1 className="text-base font-bold text-indigo-950">Document Intelligence</h1>
-            <p className="text-xs text-indigo-400 font-semibold tracking-wide">POWERED BY RAG + GEMINI</p>
+            <div style={{ fontSize: 16, fontWeight: 700, color: '#F5F5F5', fontFamily: "'Fraunces', serif" }}>Document Intelligence</div>
+            <div style={{ fontSize: 11, color: '#4ade80', fontWeight: 600, letterSpacing: '0.1em' }}>POWERED BY RAG + GEMINI</div>
           </div>
         </div>
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2.5 bg-white border border-indigo-200 rounded-2xl px-4 py-2.5 shadow-sm">
-            <FileText className="w-4 h-4 text-indigo-500 shrink-0" />
-            <span className="text-sm font-bold text-indigo-900 max-w-[180px] truncate">{doc.filename}</span>
-            <span className="text-sm text-indigo-400 font-medium shrink-0">{doc.pageCount}p · {doc.chunkCount} chunks</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, background: '#141414', border: '1px solid #262626', borderRadius: 16, padding: '10px 16px' }}>
+            <FileText size={15} color="#4ade80" />
+            <span style={{ fontSize: 14, fontWeight: 700, color: '#F5F5F5', maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{doc.filename}</span>
+            <span style={{ fontSize: 13, color: '#555', fontWeight: 500 }}>{doc.pageCount} pages</span>
           </div>
-          <button onClick={handleReset}
-            className="flex items-center gap-2 text-sm font-semibold text-indigo-500 hover:text-indigo-700 px-4 py-2.5 rounded-2xl hover:bg-white/80 transition-all duration-200">
-            <RotateCcw className="w-4 h-4" /> New document
+          <button onClick={handleReset} style={{
+            display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, fontWeight: 600,
+            color: '#888', background: 'none', border: '1px solid #262626', borderRadius: 12,
+            padding: '10px 16px', cursor: 'pointer', transition: 'all 0.2s ease',
+            fontFamily: "'Outfit', sans-serif",
+          }}
+            onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = '#D4A017'; (e.currentTarget as HTMLButtonElement).style.borderColor = '#D4A017'; }}
+            onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = '#888'; (e.currentTarget as HTMLButtonElement).style.borderColor = '#262626'; }}
+          >
+            <RotateCcw size={14} /> New document
           </button>
         </div>
       </header>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto px-6 py-8">
-        <div className="max-w-2xl mx-auto">
+      <div style={{ flex: 1, overflowY: 'auto', padding: '32px 24px' }}>
+        <div style={{ maxWidth: 680, margin: '0 auto' }}>
           {messages.length === 0 ? (
-            <div className="flex flex-col items-center justify-center text-center gap-6 pt-16">
-              <div className="w-24 h-24 rounded-3xl bg-white border border-indigo-200 shadow-xl shadow-indigo-100 flex items-center justify-center">
-                <MessageSquare className="w-12 h-12 text-indigo-500" />
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', gap: 24, paddingTop: 80 }}>
+              <div style={{ width: 88, height: 88, borderRadius: 28, background: 'rgba(74,222,128,0.08)', border: '1px solid rgba(74,222,128,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 0 40px rgba(74,222,128,0.1)' }}>
+                <MessageSquare size={44} color="#4ade80" />
               </div>
               <div>
-                <h2 className="text-3xl font-extrabold text-indigo-950">Ready to answer</h2>
-                <p className="text-lg text-indigo-400 font-medium mt-2">Ask anything about your document below</p>
+                <div style={{ fontSize: 32, fontWeight: 700, color: '#F5F5F5', fontFamily: "'Fraunces', serif", marginBottom: 8 }}>Your document is ready</div>
+                <div style={{ fontSize: 17, color: '#888', fontWeight: 500 }}>Ask anything about it below</div>
               </div>
-              <div className="flex flex-wrap gap-3 justify-center mt-2">
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, justifyContent: 'center', marginTop: 8 }}>
                 {['What is the main topic?', 'Summarize the key points', 'What are the conclusions?'].map((s) => (
-                  <button key={s} onClick={() => setInput(s)}
-                    className="text-base font-semibold px-5 py-3 rounded-2xl bg-white border border-indigo-200 text-indigo-600 hover:bg-indigo-600 hover:text-white hover:border-indigo-600 hover:shadow-lg hover:shadow-indigo-200 hover:scale-[1.04] transition-all duration-200">
+                  <button key={s} onClick={() => setInput(s)} style={{
+                    fontSize: 14, fontWeight: 600, padding: '12px 20px', borderRadius: 16,
+                    background: '#141414', border: '1px solid #262626', color: '#888',
+                    cursor: 'pointer', transition: 'all 0.2s ease', fontFamily: "'Outfit', sans-serif",
+                  }}
+                    onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = '#4ade80'; (e.currentTarget as HTMLButtonElement).style.color = '#4ade80'; (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 0 20px rgba(74,222,128,0.15)'; }}
+                    onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = '#262626'; (e.currentTarget as HTMLButtonElement).style.color = '#888'; (e.currentTarget as HTMLButtonElement).style.boxShadow = 'none'; }}
+                  >
                     {s}
                   </button>
                 ))}
               </div>
             </div>
           ) : (
-            <div className="space-y-5">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
               {messages.map((msg, i) => (
-                <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                  <div className={`max-w-[80%] rounded-3xl px-6 py-4 ${msg.role === 'user'
-                    ? 'bg-indigo-600 shadow-lg shadow-indigo-200 rounded-tr-lg'
-                    : 'bg-white border border-indigo-100 shadow-md shadow-indigo-50 rounded-tl-lg'}`}>
+                <div key={i} style={{ display: 'flex', justifyContent: msg.role === 'user' ? 'flex-end' : 'flex-start' }}>
+                  <div style={{
+                    maxWidth: '80%',
+                    borderRadius: msg.role === 'user' ? '24px 24px 6px 24px' : '24px 24px 24px 6px',
+                    padding: '16px 20px',
+                    background: msg.role === 'user' ? 'linear-gradient(135deg, #22c55e, #16a34a)' : '#141414',
+                    border: msg.role === 'user' ? 'none' : '1px solid #1e1e1e',
+                    boxShadow: msg.role === 'user' ? '0 4px 20px rgba(34,197,94,0.25)' : '0 2px 8px rgba(0,0,0,0.3)',
+                  }}>
                     {msg.role === 'user' ? (
-                      <p className="text-base leading-relaxed font-medium text-white">{msg.content}</p>
+                      <p style={{ fontSize: 15, lineHeight: 1.6, fontWeight: 500, color: 'white', margin: 0 }}>{msg.content}</p>
                     ) : (
-                      <div className="text-base leading-relaxed font-medium text-indigo-950">
+                      <div style={{ fontSize: 15, lineHeight: 1.7, fontWeight: 400, color: '#E5E5E5' }}>
                         <ReactMarkdown
                           components={{
-                            strong: ({children}) => <strong className="font-bold text-indigo-900">{children}</strong>,
-                            ul: ({children}) => <ul className="list-disc list-inside mt-2 space-y-1">{children}</ul>,
-                            li: ({children}) => <li className="text-indigo-800">{children}</li>,
-                            p: ({children}) => <p className="mb-2 last:mb-0">{children}</p>,
+                            strong: ({children}) => <strong style={{ fontWeight: 700, color: '#F5F5F5' }}>{children}</strong>,
+                            ul: ({children}) => <ul style={{ listStyleType: 'disc', paddingLeft: 20, marginTop: 8, marginBottom: 8 }}>{children}</ul>,
+                            li: ({children}) => <li style={{ color: '#D4D4D4', marginBottom: 4 }}>{children}</li>,
+                            p: ({children}) => <p style={{ margin: '0 0 8px', lastChild: 'margin-bottom: 0' } as React.CSSProperties}>{children}</p>,
                           }}
                         >
                           {msg.content}
@@ -301,7 +350,7 @@ export default function Home() {
                       </div>
                     )}
                     {msg.role === 'assistant' && msg.similarityScore !== undefined && (
-                      <div className="mt-3 pt-3 border-t border-indigo-100">
+                      <div style={{ marginTop: 12, paddingTop: 12, borderTop: '1px solid #262626' }}>
                         <ConfidenceBadge score={msg.similarityScore} isInScope={msg.isInScope ?? false} />
                       </div>
                     )}
@@ -309,12 +358,11 @@ export default function Home() {
                 </div>
               ))}
               {isAsking && (
-                <div className="flex justify-start">
-                  <div className="bg-white border border-indigo-100 rounded-3xl rounded-tl-lg px-6 py-4 shadow-md shadow-indigo-50">
-                    <div className="flex items-center gap-2">
+                <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
+                  <div style={{ background: '#141414', border: '1px solid #1e1e1e', borderRadius: '24px 24px 24px 6px', padding: '16px 20px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                       {[0, 150, 300].map((delay) => (
-                        <span key={delay} className="w-2.5 h-2.5 rounded-full bg-indigo-400 animate-bounce"
-                          style={{ animationDelay: `${delay}ms` }} />
+                        <span key={delay} className="animate-bounce" style={{ width: 8, height: 8, borderRadius: '50%', background: '#4ade80', display: 'inline-block', animationDelay: `${delay}ms` }} />
                       ))}
                     </div>
                   </div>
@@ -327,22 +375,32 @@ export default function Home() {
       </div>
 
       {/* Input */}
-      <div className="px-6 pb-8">
-        <div className="max-w-2xl mx-auto">
-          <div className="flex gap-3 bg-white rounded-3xl border border-indigo-200 shadow-xl shadow-indigo-100 p-2.5">
+      <div style={{ padding: '16px 24px 32px' }}>
+        <div style={{ maxWidth: 680, margin: '0 auto' }}>
+          <div style={{ display: 'flex', gap: 12, background: '#141414', border: '1px solid #262626', borderRadius: 20, padding: 8, boxShadow: '0 0 40px rgba(0,0,0,0.4)' }}>
             <input
               type="text" value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && handleSend()}
               placeholder="Ask a question about your document..."
               disabled={isAsking}
-              className="flex-1 bg-transparent px-4 py-3 text-base text-indigo-950 placeholder-indigo-300 outline-none font-semibold"
+              style={{
+                flex: 1, background: 'transparent', border: 'none', outline: 'none',
+                padding: '12px 16px', fontSize: 15, color: '#F5F5F5',
+                fontFamily: "'Outfit', sans-serif", fontWeight: 500,
+              }}
             />
             <button onClick={handleSend} disabled={!input.trim() || isAsking}
-              className="w-12 h-12 rounded-2xl bg-indigo-600 hover:bg-indigo-500 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center transition-all duration-200 hover:shadow-lg hover:shadow-indigo-200 hover:scale-105 active:scale-95">
+              style={{
+                width: 48, height: 48, borderRadius: 14, border: 'none', cursor: !input.trim() || isAsking ? 'not-allowed' : 'pointer',
+                background: !input.trim() || isAsking ? '#1a1a1a' : 'linear-gradient(135deg, #22c55e, #16a34a)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                transition: 'all 0.2s ease', flexShrink: 0,
+                boxShadow: !input.trim() || isAsking ? 'none' : '0 4px 15px rgba(34,197,94,0.3)',
+              }}>
               {isAsking
-                ? <Loader2 className="w-5 h-5 text-white animate-spin" />
-                : <Send className="w-5 h-5 text-white" />
+                ? <Loader2 size={20} color="#4ade80" className="animate-spin" />
+                : <Send size={20} color={!input.trim() ? '#444' : 'white'} />
               }
             </button>
           </div>
