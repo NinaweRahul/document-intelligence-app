@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { Upload, Send, FileText, RotateCcw, Loader2, MessageSquare, AlertCircle, Zap } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
@@ -283,9 +284,21 @@ export default function Home() {
                   <div className={`max-w-[80%] rounded-3xl px-6 py-4 ${msg.role === 'user'
                     ? 'bg-indigo-600 shadow-lg shadow-indigo-200 rounded-tr-lg'
                     : 'bg-white border border-indigo-100 shadow-md shadow-indigo-50 rounded-tl-lg'}`}>
-                    <p className={`text-base leading-relaxed whitespace-pre-wrap font-medium ${
-                      msg.role === 'user' ? 'text-white' : 'text-indigo-950'
-                    }`}>{msg.content}</p>
+                    {msg.role === 'user' ? (
+                      <p className="text-base leading-relaxed font-medium text-white">{msg.content}</p>
+                    ) : (
+                      <ReactMarkdown
+                        className="text-base leading-relaxed font-medium text-indigo-950 prose prose-indigo max-w-none"
+                        components={{
+                          strong: ({children}) => <strong className="font-bold text-indigo-900">{children}</strong>,
+                          ul: ({children}) => <ul className="list-disc list-inside mt-2 space-y-1">{children}</ul>,
+                          li: ({children}) => <li className="text-indigo-800">{children}</li>,
+                          p: ({children}) => <p className="mb-2 last:mb-0">{children}</p>,
+                        }}
+                      >
+                        {msg.content}
+                      </ReactMarkdown>
+                    )}
                     {msg.role === 'assistant' && msg.similarityScore !== undefined && (
                       <div className="mt-3 pt-3 border-t border-indigo-100">
                         <ConfidenceBadge score={msg.similarityScore} isInScope={msg.isInScope ?? false} />
