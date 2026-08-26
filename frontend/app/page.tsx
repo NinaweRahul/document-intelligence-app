@@ -287,17 +287,18 @@ export default function Home() {
                     {msg.role === 'user' ? (
                       <p className="text-base leading-relaxed font-medium text-white">{msg.content}</p>
                     ) : (
-                      <ReactMarkdown
-                        className="text-base leading-relaxed font-medium text-indigo-950 prose prose-indigo max-w-none"
-                        components={{
-                          strong: ({children}) => <strong className="font-bold text-indigo-900">{children}</strong>,
-                          ul: ({children}) => <ul className="list-disc list-inside mt-2 space-y-1">{children}</ul>,
-                          li: ({children}) => <li className="text-indigo-800">{children}</li>,
-                          p: ({children}) => <p className="mb-2 last:mb-0">{children}</p>,
-                        }}
-                      >
-                        {msg.content}
-                      </ReactMarkdown>
+                      <div className="text-base leading-relaxed font-medium text-indigo-950">
+                        <ReactMarkdown
+                          components={{
+                            strong: ({children}) => <strong className="font-bold text-indigo-900">{children}</strong>,
+                            ul: ({children}) => <ul className="list-disc list-inside mt-2 space-y-1">{children}</ul>,
+                            li: ({children}) => <li className="text-indigo-800">{children}</li>,
+                            p: ({children}) => <p className="mb-2 last:mb-0">{children}</p>,
+                          }}
+                        >
+                          {msg.content}
+                        </ReactMarkdown>
+                      </div>
                     )}
                     {msg.role === 'assistant' && msg.similarityScore !== undefined && (
                       <div className="mt-3 pt-3 border-t border-indigo-100">
